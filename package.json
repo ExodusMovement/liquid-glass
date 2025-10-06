@@ -49,14 +49,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ahmedawaad1804/rn-liquid-glass-view.git"
+    "url": "git+https://github.com/ExodusMovement/liquid-glass.git"
   },
-  "author": "ahmedawaad1804 <ahmedawaad1804@gmail.com> (https://github.com/ahmedawaad1804)",
+  "author": "https://github.com/ExodusMovement)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ahmedawaad1804/rn-liquid-glass-view/issues"
+    "url": "https://github.com/ExodusMovement/liquid-glass/issues"
   },
-  "homepage": "https://github.com/ahmedawaad1804/rn-liquid-glass-view#readme",
+  "homepage": "https://github.com/ExodusMovement/liquid-glass#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },

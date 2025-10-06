@@ -2,7 +2,7 @@
   "compilerOptions": {
     "rootDir": ".",
     "paths": {
-      "rn-liquid-glass-view": ["./src/index"]
+      "@exodus/liquid-glass": ["./src/index"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,

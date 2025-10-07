@@ -33,9 +33,9 @@ export default function App() {
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView}>
-        <Image source={require('./aswan.jpg')} />
-        <Image source={require('./aswan.jpg')} />
-        <Image source={require('./aswan.jpg')} />
+        <Image source={require('./bg.jpg')} />
+        <Image source={require('./bg.jpg')} />
+        <Image source={require('./bg.jpg')} />
       </ScrollView>
       <View style={styles.dim} />
       <View style={styles.boxContainer}>

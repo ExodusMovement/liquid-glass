@@ -40,6 +40,7 @@ using namespace facebook::react;
 
 - (void) setUpGlassEffect {
   effectView = [[UIVisualEffectView alloc] init];
+  [self setEffectStyle:@"clear"];
   [self addSubview:effectView];
 }
 

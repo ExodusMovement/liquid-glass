@@ -46,10 +46,10 @@ export default function App() {
             console.log('onPress');
           }}
         />
-        {/* <GlassView text="To" />
+        <GlassView text="To" />
         <GlassView text="Liquid" />
         <GlassView text="Glass" />
-        <GlassView text="Effect" /> */}
+        <GlassView text="Effect" />
       </View>
     </View>
   );

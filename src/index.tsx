@@ -5,6 +5,8 @@ import { LiquidGlassView as LiquidGlassViewNative } from './LiquidGlassView';
 
 type Props = ViewProps & {
   onPress?: () => void;
+  interactive?: boolean;
+  effectStyle?: 'clear' | 'regular';
 };
 
 export const isLiquidGlassSupported =

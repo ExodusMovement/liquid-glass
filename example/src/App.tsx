@@ -8,13 +8,21 @@ import {
 } from 'react-native';
 import LiquidGlass from '../../src';
 
-const GlassView = ({ text = 'Hello' }: { text?: string }) => {
+const GlassView = ({
+  text = 'Hello',
+  onPress,
+  interactive = false,
+}: {
+  text?: string;
+  onPress?: () => void;
+  interactive?: boolean;
+}) => {
   return (
     <LiquidGlass
-      onPress={() => {
-        console.log('pressed');
-      }}
+      interactive={interactive}
+      onPress={onPress}
       style={styles.box}
+      effectStyle="clear"
     >
       <Text style={styles.text}>{text}</Text>
     </LiquidGlass>
@@ -22,8 +30,6 @@ const GlassView = ({ text = 'Hello' }: { text?: string }) => {
 };
 
 export default function App() {
-  console.log('dddd');
-
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView}>
@@ -31,12 +37,19 @@ export default function App() {
         <Image source={require('./aswan.jpg')} />
         <Image source={require('./aswan.jpg')} />
       </ScrollView>
+      <View style={styles.dim} />
       <View style={styles.boxContainer}>
-        <GlassView text="Welcome" />
-        <GlassView text="To" />
+        <GlassView
+          interactive
+          text="Welcome"
+          onPress={() => {
+            console.log('onPress');
+          }}
+        />
+        {/* <GlassView text="To" />
         <GlassView text="Liquid" />
         <GlassView text="Glass" />
-        <GlassView text="Effect" />
+        <GlassView text="Effect" /> */}
       </View>
     </View>
   );
@@ -47,6 +60,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  dim: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    pointerEvents: 'none',
   },
   box: {
     width: 300,
@@ -63,6 +81,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 30,
     fontWeight: 'bold',
+    pointerEvents: 'none',
   },
   textAbsolute: {
     color: 'white',

@@ -21,32 +21,59 @@ using namespace facebook::react;
 #endif // RCT_NEW_ARCH_ENABLED
 @end
 
-@implementation LiquidGlassView
+@implementation LiquidGlassView {
+  UIVisualEffectView *effectView;
+  UIGlassEffect *glassEffect;
+  BOOL interactive;
+}
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
   self = [super initWithFrame:frame];
   if (self) {
     self.userInteractionEnabled = YES;
-
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap)];
     [self addGestureRecognizer:tapGesture];
   }
   return self;
 }
 
-- (void)handleTap
-{
+- (void) setUpGlassEffect {
+  effectView = [[UIVisualEffectView alloc] init];
+  [self setContentView:effectView];
+}
+
+- (void)handleTap {
   if (self.onPress) {
     self.onPress(@{});
   }
 }
 
+- (void)layoutSubviews {
+  [super layoutSubviews];
+  if(effectView){
+    effectView.layer.cornerRadius = self.layer.cornerRadius;
+    effectView.layer.cornerCurve = self.layer.cornerCurve;
+    effectView.frame = self.bounds;
+  }
+}
+
+- (void) setInteractive:(BOOL)active {
+  interactive = active;
+  if(glassEffect){
+    glassEffect.interactive = interactive;
+  }
+}
+
+- (void) setEffectStyle:(NSString *)style {
+  glassEffect = [UIGlassEffect effectWithStyle:[style isEqualToString:@"clear"] ? UIGlassEffectStyleClear : UIGlassEffectStyleRegular];
+  glassEffect.interactive = interactive;
+  effectView.effect = glassEffect;
+}
 
 #ifdef RCT_NEW_ARCH_ENABLED
-Class<RCTComponentViewProtocol> LiquidGlassViewCls(void)
-{
-    return LiquidGlassView.class;
+Class<RCTComponentViewProtocol> LiquidGlassViewCls(void) {
+  return LiquidGlassView.class;
 }
 #endif // RCT_NEW_ARCH_ENABLED
 @end

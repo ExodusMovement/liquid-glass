@@ -12,28 +12,14 @@
 RCT_EXPORT_MODULE(LiquidGlassView)
 
 - (UIView *)view {
-
-  UIGlassEffect *glassEffect = [[UIGlassEffect alloc] init];
-    glassEffect.interactive = YES;
-
-  UIVisualEffectView *effectView = [[UIVisualEffectView alloc] initWithEffect:glassEffect];
-  effectView.backgroundColor = [UIColor clearColor];
-
-  LiquidGlassView *containerView = [[LiquidGlassView alloc] init];
-  containerView.backgroundColor = [UIColor clearColor];
-
-
-  effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-
-  [containerView addSubview:effectView];
-  containerView.layer.masksToBounds = YES ;
-
-  return containerView;
+  LiquidGlassView *liquidGlassView = [[LiquidGlassView alloc] init];
+  [liquidGlassView setUpGlassEffect];
+  return liquidGlassView;
 }
 
 RCT_EXPORT_VIEW_PROPERTY(onPress, RCTBubblingEventBlock);
-
-
+RCT_EXPORT_VIEW_PROPERTY(interactive, BOOL);
+RCT_EXPORT_VIEW_PROPERTY(effectStyle, NSString*);
 
 
 @end

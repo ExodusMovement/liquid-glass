@@ -12,10 +12,12 @@ const GlassView = ({
   text = 'Hello',
   onPress,
   interactive = false,
+  tintColor,
 }: {
   text?: string;
   onPress?: () => void;
   interactive?: boolean;
+  tintColor?: string;
 }) => {
   return (
     <LiquidGlass
@@ -23,6 +25,7 @@ const GlassView = ({
       onPress={onPress}
       style={styles.box}
       effectStyle="clear"
+      tintColor={tintColor}
     >
       <Text style={styles.text}>{text}</Text>
     </LiquidGlass>
@@ -46,9 +49,9 @@ export default function App() {
             console.log('onPress');
           }}
         />
-        <GlassView text="To" />
-        <GlassView text="Liquid" />
-        <GlassView text="Glass" />
+        <GlassView text="To" tintColor="#9430c2" />
+        <GlassView text="Liquid" tintColor="green" />
+        <GlassView text="Glass" tintColor="rgb(0,0,255)" />
         <GlassView text="Effect" />
       </View>
     </View>

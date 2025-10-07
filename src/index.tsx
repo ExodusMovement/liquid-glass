@@ -7,6 +7,7 @@ type Props = ViewProps & {
   onPress?: () => void;
   interactive?: boolean;
   effectStyle?: 'clear' | 'regular';
+  tintColor?: string;
 };
 
 export const isLiquidGlassSupported =

@@ -29,7 +29,7 @@ UIView
 // @property (nonatomic, strong, nullable) RCTBubblingEventBlock onPress;
 @property (nonatomic, copy) RCTBubblingEventBlock onPress;
 
-- (void) setUpGlassEffect;
+- (void)setUpGlassEffect;
 
 @end
 

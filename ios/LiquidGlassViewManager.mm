@@ -20,6 +20,7 @@ RCT_EXPORT_MODULE(LiquidGlassView)
 RCT_EXPORT_VIEW_PROPERTY(onPress, RCTBubblingEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(interactive, BOOL);
 RCT_EXPORT_VIEW_PROPERTY(effectStyle, NSString*);
+RCT_EXPORT_VIEW_PROPERTY(tintColor, UIColor);
 
 
 @end

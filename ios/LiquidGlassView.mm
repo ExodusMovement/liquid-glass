@@ -1,4 +1,5 @@
 #import "LiquidGlassView.h"
+#import <React/RCTConvert.h>
 
 #ifdef RCT_NEW_ARCH_ENABLED
 #import <react/renderer/components/RNLiquidGlassViewSpec/ComponentDescriptors.h>
@@ -24,6 +25,7 @@ using namespace facebook::react;
 @implementation LiquidGlassView {
   UIVisualEffectView *effectView;
   UIGlassEffect *glassEffect;
+  UIColor *tintColor;
   BOOL interactive;
 }
 
@@ -38,7 +40,7 @@ using namespace facebook::react;
   return self;
 }
 
-- (void) setUpGlassEffect {
+- (void)setUpGlassEffect {
   effectView = [[UIVisualEffectView alloc] init];
   [self setEffectStyle:@"clear"];
   [self addSubview:effectView];
@@ -59,18 +61,31 @@ using namespace facebook::react;
   }
 }
 
-- (void) setInteractive:(BOOL)active {
+- (void) updateEffect {
+  effectView.effect = glassEffect;
+}
+
+- (void)setInteractive:(BOOL)active {
   interactive = active;
   if(glassEffect){
     glassEffect.interactive = interactive;
-    effectView.effect = glassEffect;
+    [self updateEffect];
   }
 }
 
-- (void) setEffectStyle:(NSString *)style {
+- (void)setEffectStyle:(NSString *)style {
   glassEffect = [UIGlassEffect effectWithStyle:[style isEqualToString:@"clear"] ? UIGlassEffectStyleClear : UIGlassEffectStyleRegular];
   glassEffect.interactive = interactive;
-  effectView.effect = glassEffect;
+  glassEffect.tintColor = tintColor;
+  [self updateEffect];
+}
+
+- (void)setTintColor:(UIColor *)tint{
+  tintColor = tint;
+  if(glassEffect){
+    glassEffect.tintColor = tintColor;
+    [self updateEffect];
+  }
 }
 
 #ifdef RCT_NEW_ARCH_ENABLED

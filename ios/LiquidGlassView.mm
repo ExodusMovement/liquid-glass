@@ -63,6 +63,7 @@ using namespace facebook::react;
   interactive = active;
   if(glassEffect){
     glassEffect.interactive = interactive;
+    effectView.effect = glassEffect;
   }
 }
 

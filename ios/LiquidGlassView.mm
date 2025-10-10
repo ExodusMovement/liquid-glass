@@ -8,15 +8,11 @@
 #import <react/renderer/components/RNLiquidGlassViewSpec/RCTComponentViewHelpers.h>
 
 #import "RCTFabricComponentsPlugins.h"
-#endif
+#endif // RCT_NEW_ARCH_ENABLED
 
 #ifdef RCT_NEW_ARCH_ENABLED
-
 using namespace facebook::react;
-
 @interface LiquidGlassView () <RCTLiquidGlassViewViewProtocol>
-
-
 #else
 @interface LiquidGlassView ()
 #endif // RCT_NEW_ARCH_ENABLED
@@ -24,15 +20,24 @@ using namespace facebook::react;
 
 @implementation LiquidGlassView {
     UIVisualEffectView *effectView;
-    UIGlassEffect *glassEffect;
-    UIColor *tintColor;
-    BOOL interactive;
+    UIColor *_tintColor;
+    BOOL _interactive;
+    UIGlassEffectStyle _effectStyle;
+    BOOL _effectNeedsUpdate;
 }
+
+#pragma mark - Initialization
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
+        _interactive = YES;
+        _effectStyle = UIGlassEffectStyleClear;
+        _tintColor = [UIColor clearColor];
+        _effectNeedsUpdate = YES;
+
+        [self setUpGlassEffect];
         self.userInteractionEnabled = YES;
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap)];
         [self addGestureRecognizer:tapGesture];
@@ -41,10 +46,89 @@ using namespace facebook::react;
 }
 
 - (void)setUpGlassEffect {
+    if (effectView) {
+        return;
+    }
     effectView = [[UIVisualEffectView alloc] init];
-    [self setEffectStyle:@"clear"];
-    [self addSubview:effectView];
+    [super addSubview:effectView];
 }
+
+#pragma mark - Child View Management
+
+- (void)insertReactSubview:(UIView *)subview atIndex:(NSInteger)atIndex
+{
+    [effectView.contentView insertSubview:subview atIndex:atIndex];
+}
+
+- (void)removeReactSubview:(UIView *)subview
+{
+    [subview removeFromSuperview];
+}
+
+#ifdef RCT_NEW_ARCH_ENABLED
+- (void)mountChildComponentView:(UIView *)childComponentView index:(NSInteger)index
+{
+    [effectView.contentView insertSubview:childComponentView atIndex:index];
+}
+
+- (void)unmountChildComponentView:(UIView *)childComponentView atIndex:(NSInteger)index
+{
+    [childComponentView removeFromSuperview];
+}
+#endif
+
+#pragma mark - Layout and Effect Updates
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    [self updateGlassEffectIfNeeded];
+    if(effectView){
+        effectView.frame = self.bounds;
+        effectView.layer.cornerRadius = self.layer.cornerRadius;
+        effectView.layer.cornerCurve = self.layer.cornerCurve;
+    }
+}
+
+- (void)updateGlassEffectIfNeeded {
+    if (!_effectNeedsUpdate) {
+        return;
+    }
+  
+    UIGlassEffect *glassEffect = [UIGlassEffect effectWithStyle:_effectStyle];
+    glassEffect.interactive = _interactive;
+    glassEffect.tintColor = _tintColor;
+    effectView.effect = glassEffect;
+    _effectNeedsUpdate = NO;
+}
+
+#pragma mark - Prop Setters
+
+- (void)setInteractive:(BOOL)interactive {
+    if (_interactive != interactive) {
+        _interactive = interactive;
+        _effectNeedsUpdate = YES;
+        [self setNeedsLayout];
+    }
+}
+
+- (void)setEffectStyle:(NSString *)style {
+    UIGlassEffectStyle newStyle = [style isEqualToString:@"clear"] ? UIGlassEffectStyleClear : UIGlassEffectStyleRegular;
+    if (_effectStyle != newStyle) {
+        _effectStyle = newStyle;
+        _effectNeedsUpdate = YES;
+        [self setNeedsLayout];
+    }
+}
+
+- (void)setTintColor:(UIColor *)tint {
+    if (![_tintColor isEqual:tint]) {
+        _tintColor = tint;
+        _effectNeedsUpdate = YES;
+        [self setNeedsLayout];
+    }
+}
+
+#pragma mark - Event Handlers
 
 - (void)handleTap {
     if (self.onPress) {
@@ -52,52 +136,18 @@ using namespace facebook::react;
     }
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    if(effectView){
-        effectView.layer.cornerRadius = self.layer.cornerRadius;
-        effectView.layer.cornerCurve = self.layer.cornerCurve;
-        effectView.frame = self.bounds;
-    }
-    
-    // Fix content grabbing touch events
-    for (UIView *subview in self.subviews) {
-        if(![subview isKindOfClass:UIVisualEffectView.class])
-            subview.userInteractionEnabled = !interactive;
-    }
-}
-
-- (void) updateEffect {
-    effectView.effect = glassEffect;
-}
-
-- (void)setInteractive:(BOOL)active {
-    interactive = active;
-    if(glassEffect){
-        glassEffect.interactive = interactive;
-        [self updateEffect];
-    }
-}
-
-- (void)setEffectStyle:(NSString *)style {
-    glassEffect = [UIGlassEffect effectWithStyle:[style isEqualToString:@"clear"] ? UIGlassEffectStyleClear : UIGlassEffectStyleRegular];
-    glassEffect.interactive = interactive;
-    glassEffect.tintColor = tintColor;
-    [self updateEffect];
-}
-
-- (void)setTintColor:(UIColor *)tint{
-    tintColor = tint;
-    if(glassEffect){
-        glassEffect.tintColor = tintColor;
-        [self updateEffect];
-    }
-}
+#pragma mark - Fabric-Specific Boilerplate
 
 #ifdef RCT_NEW_ARCH_ENABLED
-Class<RCTComponentViewProtocol> LiquidGlassViewCls(void) {
-    return LiquidGlassView.class;
++ (ComponentDescriptorProvider)componentDescriptorProvider
+{
+  return concreteComponentDescriptorProvider<LiquidGlassViewComponentDescriptor>();
 }
-#endif // RCT_NEW_ARCH_ENABLED
-@end
 
+- (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
+{
+    [super updateProps:props oldProps:oldProps];
+}
+#endif
+
+@end

@@ -49,7 +49,7 @@ export default function App() {
             console.log('onPress');
           }}
         />
-        <GlassView text="To" tintColor="#9430c2" />
+        <GlassView text="To" tintColor="#9430c2" interactive />
         <GlassView text="Liquid" tintColor="green" />
         <GlassView text="Glass" tintColor="rgb(0,0,255)" />
         <GlassView text="Effect" />

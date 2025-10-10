@@ -12,14 +12,12 @@
 RCT_EXPORT_MODULE(LiquidGlassView)
 
 - (UIView *)view {
-  LiquidGlassView *liquidGlassView = [[LiquidGlassView alloc] init];
-  [liquidGlassView setUpGlassEffect];
-  return liquidGlassView;
+  return [[LiquidGlassView alloc] init];
 }
 
 RCT_EXPORT_VIEW_PROPERTY(onPress, RCTBubblingEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(interactive, BOOL);
-RCT_EXPORT_VIEW_PROPERTY(effectStyle, NSString*);
+RCT_EXPORT_VIEW_PROPERTY(effectStyle, NSString);
 RCT_EXPORT_VIEW_PROPERTY(tintColor, UIColor);
 
 

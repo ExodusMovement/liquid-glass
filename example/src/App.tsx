@@ -13,18 +13,20 @@ const GlassView = ({
   onPress,
   interactive = false,
   tintColor,
+  effectStyle,
 }: {
   text?: string;
   onPress?: () => void;
   interactive?: boolean;
   tintColor?: string;
+  effectStyle?: 'regular' | 'clear';
 }) => {
   return (
     <LiquidGlass
       interactive={interactive}
       onPress={onPress}
       style={styles.box}
-      effectStyle="clear"
+      effectStyle={effectStyle}
       tintColor={tintColor}
     >
       <Text style={styles.text}>{text}</Text>

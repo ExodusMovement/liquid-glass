@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.authors      = package["author"]
 
   s.platforms    = { :ios => min_ios_version_supported }
-  s.source       = { :git => "https://github.com/ExodusMovement/liquid-glass.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/ExodusMovement/liquid-glass.git", :sha256 => "a94a80794381b1ec2bc0531e4440115892e63194" }
 
   s.source_files = "ios/**/*.{h,m,mm}"
 

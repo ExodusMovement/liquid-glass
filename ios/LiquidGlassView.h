@@ -28,6 +28,10 @@ UIView
 #endif // RCT_NEW_ARCH_ENABLED
 // @property (nonatomic, strong, nullable) RCTBubblingEventBlock onPress;
 @property (nonatomic, copy) RCTBubblingEventBlock onPress;
+@property (nonatomic, assign) CGFloat borderTopLeftRadius;
+@property (nonatomic, assign) CGFloat borderTopRightRadius;
+@property (nonatomic, assign) CGFloat borderBottomLeftRadius;
+@property (nonatomic, assign) CGFloat borderBottomRightRadius;
 
 - (void)setUpGlassEffect;
 

@@ -3,7 +3,6 @@
 Bring your UI into the future with **React Native Liquid Glass** — a sleek, glassmorphic view powered by Apple’s new `UIGlassEffect` in **iOS 18**. Perfectly frosted. Surprisingly easy.
 
 > ⚠️ **iOS 26+ only**
-> On Android and on iOS versions below 26, this component returns a `<Pressable />` as a fallback.
 
 ---
 
@@ -39,10 +38,6 @@ yarn add @exodus/liquid-glass
 - Xcode 26
 
 ---
-
-## ⚡ Performance Tip
-
-For optimal performance on iOS, keep either the width or height of your `LiquidGlassView` under **65px**. The native `UIGlassEffect` requires significant processing power, and smaller dimensions help maintain smooth performance.
 
 ## 🚀 Usage
 

@@ -32,6 +32,7 @@ UIView
 @property (nonatomic, assign) CGFloat borderTopRightRadius;
 @property (nonatomic, assign) CGFloat borderBottomLeftRadius;
 @property (nonatomic, assign) CGFloat borderBottomRightRadius;
+@property (nonatomic, assign) BOOL glassEnabled;
 
 - (void)setUpGlassEffect;
 

@@ -24,6 +24,7 @@ using namespace facebook::react;
     BOOL _interactive;
     UIGlassEffectStyle _effectStyle;
     BOOL _effectNeedsUpdate;
+    BOOL _glassEnabled;
 }
 
 #pragma mark - Initialization
@@ -36,6 +37,7 @@ using namespace facebook::react;
         _effectStyle = UIGlassEffectStyleClear;
         _tintColor = [UIColor clearColor];
         _effectNeedsUpdate = YES;
+        _glassEnabled = YES;
         
         [self setUpGlassEffect];
         self.userInteractionEnabled = YES;
@@ -46,7 +48,7 @@ using namespace facebook::react;
 }
 
 - (void)setUpGlassEffect {
-    if (effectView) {
+    if (effectView || !_glassEnabled) {
         return;
     }
     effectView = [[UIVisualEffectView alloc] init];
@@ -57,7 +59,11 @@ using namespace facebook::react;
 
 - (void)insertReactSubview:(UIView *)subview atIndex:(NSInteger)atIndex
 {
-    [effectView.contentView insertSubview:subview atIndex:atIndex];
+    if (_glassEnabled && effectView) {
+        [effectView.contentView insertSubview:subview atIndex:atIndex];
+    } else {
+        [super insertSubview:subview atIndex:atIndex];
+    }
 }
 
 - (void)removeReactSubview:(UIView *)subview
@@ -68,7 +74,11 @@ using namespace facebook::react;
 #ifdef RCT_NEW_ARCH_ENABLED
 - (void)mountChildComponentView:(UIView *)childComponentView index:(NSInteger)index
 {
-    [effectView.contentView insertSubview:childComponentView atIndex:index];
+    if (_glassEnabled && effectView) {
+        [effectView.contentView insertSubview:childComponentView atIndex:index];
+    } else {
+        [super addSubview:childComponentView];
+    }
 }
 
 - (void)unmountChildComponentView:(UIView *)childComponentView atIndex:(NSInteger)index
@@ -81,7 +91,13 @@ using namespace facebook::react;
 
 - (void)layoutSubviews {
     [super layoutSubviews];
+
+    if (!_glassEnabled) {
+        return;
+    }
+
     [self updateGlassEffectIfNeeded];
+
     if(effectView){
         effectView.frame = self.bounds;
         
@@ -175,6 +191,24 @@ using namespace facebook::react;
         _effectNeedsUpdate = YES;
         [self setNeedsLayout];
     }
+}
+
+- (void)setGlassEnabled:(BOOL)glassEnabled {
+    if (_glassEnabled == glassEnabled) return;
+
+    _glassEnabled = glassEnabled;
+
+    if (!_glassEnabled) {
+        if (effectView) {
+            [effectView removeFromSuperview];
+            effectView = nil;
+        }
+    } else {
+        [self setUpGlassEffect];
+        _effectNeedsUpdate = YES;
+    }
+
+    [self setNeedsLayout];
 }
 
 #pragma mark - Event Handlers

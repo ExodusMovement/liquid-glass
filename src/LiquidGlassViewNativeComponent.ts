@@ -11,6 +11,7 @@ interface NativeProps extends ViewProps {
   interactive?: boolean;
   effectStyle?: WithDefault<EffectStyleType, 'clear'>;
   tintColor?: ColorValue;
+  glassEnabled?: boolean;
 }
 
 export default codegenNativeComponent<NativeProps>('LiquidGlassView');

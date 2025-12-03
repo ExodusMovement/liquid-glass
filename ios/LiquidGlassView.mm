@@ -200,12 +200,24 @@ using namespace facebook::react;
 
     if (!_glassEnabled) {
         if (effectView) {
+            NSArray *children = [effectView.contentView.subviews copy];
+            for (UIView *sub in children) {
+                [super addSubview:sub];
+            }
+
             [effectView removeFromSuperview];
             effectView = nil;
         }
     } else {
         [self setUpGlassEffect];
         _effectNeedsUpdate = YES;
+
+        NSArray *children = [self.subviews copy];
+        for (UIView *sub in children) {
+            if (sub != effectView) {
+                [effectView.contentView addSubview:sub];
+            }
+        }
     }
 
     [self setNeedsLayout];

@@ -23,7 +23,6 @@ RCT_EXPORT_VIEW_PROPERTY(borderTopLeftRadius, CGFloat)
 RCT_EXPORT_VIEW_PROPERTY(borderTopRightRadius, CGFloat)
 RCT_EXPORT_VIEW_PROPERTY(borderBottomLeftRadius, CGFloat)
 RCT_EXPORT_VIEW_PROPERTY(borderBottomRightRadius, CGFloat)
-RCT_EXPORT_VIEW_PROPERTY(glassEnabled, BOOL);
 
 
 @end

@@ -24,7 +24,6 @@ using namespace facebook::react;
     BOOL _interactive;
     UIGlassEffectStyle _effectStyle;
     BOOL _effectNeedsUpdate;
-    BOOL _glassEnabled;
 }
 
 #pragma mark - Initialization
@@ -37,7 +36,6 @@ using namespace facebook::react;
         _effectStyle = UIGlassEffectStyleClear;
         _tintColor = [UIColor clearColor];
         _effectNeedsUpdate = YES;
-        _glassEnabled = YES;
         
         [self setUpGlassEffect];
         self.userInteractionEnabled = YES;
@@ -48,7 +46,7 @@ using namespace facebook::react;
 }
 
 - (void)setUpGlassEffect {
-    if (effectView || !_glassEnabled) {
+    if (effectView) {
         return;
     }
     effectView = [[UIVisualEffectView alloc] init];
@@ -59,11 +57,7 @@ using namespace facebook::react;
 
 - (void)insertReactSubview:(UIView *)subview atIndex:(NSInteger)atIndex
 {
-    if (_glassEnabled && effectView) {
-        [effectView.contentView insertSubview:subview atIndex:atIndex];
-    } else {
-        [super insertSubview:subview atIndex:atIndex];
-    }
+    [effectView.contentView insertSubview:subview atIndex:atIndex];
 }
 
 - (void)removeReactSubview:(UIView *)subview
@@ -74,11 +68,7 @@ using namespace facebook::react;
 #ifdef RCT_NEW_ARCH_ENABLED
 - (void)mountChildComponentView:(UIView *)childComponentView index:(NSInteger)index
 {
-    if (_glassEnabled && effectView) {
-        [effectView.contentView insertSubview:childComponentView atIndex:index];
-    } else {
-        [super addSubview:childComponentView];
-    }
+    [effectView.contentView insertSubview:childComponentView atIndex:index];
 }
 
 - (void)unmountChildComponentView:(UIView *)childComponentView atIndex:(NSInteger)index
@@ -91,13 +81,7 @@ using namespace facebook::react;
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-
-    if (!_glassEnabled) {
-        return;
-    }
-
     [self updateGlassEffectIfNeeded];
-
     if(effectView){
         effectView.frame = self.bounds;
         
@@ -154,11 +138,22 @@ using namespace facebook::react;
     if (!_effectNeedsUpdate) {
         return;
     }
-    
-    UIGlassEffect *glassEffect = [UIGlassEffect effectWithStyle:_effectStyle];
-    glassEffect.interactive = _interactive;
-    glassEffect.tintColor = _tintColor;
-    effectView.effect = glassEffect;
+
+    switch (_effectStyle) {
+        case UIGlassEffectStyleNone:
+            effectView.effect = nil;
+            break;
+
+        case UIGlassEffectStyleRegular:
+        case UIGlassEffectStyleClear: {
+            UIGlassEffect *glassEffect = [UIGlassEffect effectWithStyle:_effectStyle];
+            glassEffect.interactive = _interactive;
+            glassEffect.tintColor = _tintColor;
+            effectView.effect = glassEffect;
+            break;
+        }
+    }
+
     _effectNeedsUpdate = NO;
 }
 
@@ -177,7 +172,16 @@ using namespace facebook::react;
 }
 
 - (void)setEffectStyle:(NSString *)style {
-    UIGlassEffectStyle newStyle = [style isEqualToString:@"regular"] ? UIGlassEffectStyleRegular : UIGlassEffectStyleClear;
+    UIGlassEffectStyle newStyle;
+
+    if ([style isEqualToString:@"regular"]) {
+        newStyle = UIGlassEffectStyleRegular;
+    } else if ([style isEqualToString:@"none"]) {
+        newStyle = UIGlassEffectStyleNone;
+    } else {
+        newStyle = UIGlassEffectStyleClear;
+    }
+
     if (_effectStyle != newStyle) {
         _effectStyle = newStyle;
         _effectNeedsUpdate = YES;
@@ -191,36 +195,6 @@ using namespace facebook::react;
         _effectNeedsUpdate = YES;
         [self setNeedsLayout];
     }
-}
-
-- (void)setGlassEnabled:(BOOL)glassEnabled {
-    if (_glassEnabled == glassEnabled) return;
-
-    _glassEnabled = glassEnabled;
-
-    if (!_glassEnabled) {
-        if (effectView) {
-            NSArray *children = [effectView.contentView.subviews copy];
-            for (UIView *sub in children) {
-                [super addSubview:sub];
-            }
-
-            [effectView removeFromSuperview];
-            effectView = nil;
-        }
-    } else {
-        [self setUpGlassEffect];
-        _effectNeedsUpdate = YES;
-
-        NSArray *children = [self.subviews copy];
-        for (UIView *sub in children) {
-            if (sub != effectView) {
-                [effectView.contentView addSubview:sub];
-            }
-        }
-    }
-
-    [self setNeedsLayout];
 }
 
 #pragma mark - Event Handlers

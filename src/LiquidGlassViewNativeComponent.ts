@@ -5,7 +5,7 @@ import type {
   WithDefault,
 } from 'react-native/Libraries/Types/CodegenTypes';
 
-type EffectStyleType = 'clear' | 'regular';
+type EffectStyleType = 'clear' | 'regular' | 'none';
 interface NativeProps extends ViewProps {
   onPress?: BubblingEventHandler<{}>;
   interactive?: boolean;

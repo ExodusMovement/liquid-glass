@@ -18,11 +18,17 @@ using namespace facebook::react;
 #endif // RCT_NEW_ARCH_ENABLED
 @end
 
+typedef NS_ENUM(NSInteger, EXGlassEffectStyle) {
+    EXGlassEffectStyleClear = 0,
+    EXGlassEffectStyleRegular = 1,
+    EXGlassEffectStyleNone = 2
+};
+
 @implementation LiquidGlassView {
     UIVisualEffectView *effectView;
     UIColor *_tintColor;
     BOOL _interactive;
-    UIGlassEffectStyle _effectStyle;
+    EXGlassEffectStyle _effectStyle;
     BOOL _effectNeedsUpdate;
 }
 
@@ -33,7 +39,7 @@ using namespace facebook::react;
     self = [super initWithFrame:frame];
     if (self) {
         _interactive = YES;
-        _effectStyle = UIGlassEffectStyleClear;
+        _effectStyle = EXGlassEffectStyleClear;
         _tintColor = [UIColor clearColor];
         _effectNeedsUpdate = YES;
         
@@ -140,16 +146,25 @@ using namespace facebook::react;
     }
 
     switch (_effectStyle) {
-        case UIGlassEffectStyleNone:
+        case EXGlassEffectStyleNone:
             effectView.effect = nil;
             break;
 
-        case UIGlassEffectStyleRegular:
-        case UIGlassEffectStyleClear: {
-            UIGlassEffect *glassEffect = [UIGlassEffect effectWithStyle:_effectStyle];
-            glassEffect.interactive = _interactive;
-            glassEffect.tintColor = _tintColor;
-            effectView.effect = glassEffect;
+        case EXGlassEffectStyleRegular:
+        case EXGlassEffectStyleClear: {
+            if (@available(iOS 26.0, *)) {
+                UIGlassEffectStyle uiStyle =
+                    (_effectStyle == EXGlassEffectStyleRegular)
+                        ? UIGlassEffectStyleRegular
+                        : UIGlassEffectStyleClear;
+
+                UIGlassEffect *glassEffect = [UIGlassEffect effectWithStyle:uiStyle];
+                glassEffect.interactive = _interactive;
+                glassEffect.tintColor = _tintColor;
+                effectView.effect = glassEffect;
+            } else {
+                effectView.effect = nil;
+            }
             break;
         }
     }
@@ -172,14 +187,14 @@ using namespace facebook::react;
 }
 
 - (void)setEffectStyle:(NSString *)style {
-    UIGlassEffectStyle newStyle;
+    EXGlassEffectStyle newStyle;
 
     if ([style isEqualToString:@"regular"]) {
-        newStyle = UIGlassEffectStyleRegular;
+        newStyle = EXGlassEffectStyleRegular;
     } else if ([style isEqualToString:@"none"]) {
-        newStyle = UIGlassEffectStyleNone;
+        newStyle = EXGlassEffectStyleNone;
     } else {
-        newStyle = UIGlassEffectStyleClear;
+        newStyle = EXGlassEffectStyleClear;
     }
 
     if (_effectStyle != newStyle) {
@@ -220,3 +235,4 @@ using namespace facebook::react;
 #endif
 
 @end
+

@@ -11,7 +11,8 @@
       "types": "./lib/typescript/src/index.d.ts",
       "import": "./lib/module/index.js",
       "require": "./lib/commonjs/index.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "files": [
     "src",

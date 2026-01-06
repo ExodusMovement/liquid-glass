@@ -1,6 +1,6 @@
 {
   "name": "@exodus/liquid-glass",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "iOS-only React Native liquid glass effect",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
